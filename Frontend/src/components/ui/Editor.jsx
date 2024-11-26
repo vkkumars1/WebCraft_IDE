@@ -58,7 +58,6 @@ button:hover {
 console.log("Welcome to WebCraft IDE!");
 `
 };
-
 export default function WebCraftIDE() {
   const [activeTab, setActiveTab] = useState('html');
   const [code, setCode] = useState(defaultCode);
