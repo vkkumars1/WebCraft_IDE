@@ -126,7 +126,7 @@ function CreateProjectModal({ isOpen, onClose }) {
       }, 1000);
 
       setProjectTitle('');
-      // console.log("Project created successfully:", response.data);
+      console.log("Project created successfully:", response.data);
     } catch (err) {
       
       console.error("Error:", err.response?.data || err.message);

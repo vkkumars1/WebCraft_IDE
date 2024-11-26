@@ -72,7 +72,7 @@ export default function WebCraftIDE() {
         },
         duration: 3000, // Duration in milliseconds (3000ms = 3 seconds)
       });
-      // console.log("Project Saved Successfully:", response.data.project);
+      console.log("Project Saved Successfully:", response.data.project);
      
       // You might want to add a visual feedback here, like a toast notification
     } catch (err) {
@@ -152,7 +152,7 @@ export default function WebCraftIDE() {
             },
             duration: 3000, // Duration in milliseconds (3000ms = 3 seconds)
           });
-          // console.log("Project Updated Successfully:", response.data.project);
+          console.log("Project Updated Successfully:", response.data.project);
         } catch (err) {
           console.error("Error saving project:", err.response?.data || err.message);
         }
