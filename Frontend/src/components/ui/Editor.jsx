@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Editor from "@monaco-editor/react";
 import { Sun, Moon, Download, Home, Menu, X, Save } from 'lucide-react';
@@ -18,6 +18,7 @@ const defaultCode = {
 </head>
 <body>
   <div class="hello">Hello, WebCraft IDE!</div>
+  <button onclick="alert('Hello from WebCraft IDE!')">Click Me</button>
 </body>
 </html>
 `,
@@ -25,6 +26,7 @@ const defaultCode = {
 body { 
   font-family: Arial, sans-serif; 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -38,8 +40,23 @@ body {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
 }`,
-  js: 'console.log("Welcome to WebCraft IDE!");'
+  js: `
+console.log("Welcome to WebCraft IDE!");
+`
 };
 
 export default function WebCraftIDE() {
@@ -50,6 +67,28 @@ export default function WebCraftIDE() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false); // If it's part of state
   const [projectTitle, setProjectTitle] = useState('');
+  const iframeRef = useRef(null);
+  // Generate combined output for iframe
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (iframe) {
+      const document = iframe.contentDocument || iframe.contentWindow.document;
+      const combinedCode = `
+        <html>
+          <head>
+            <style>${code.css}</style>
+          </head>
+          <body>
+            ${code.html}
+            <script>${code.js}<\/script>
+          </body>
+        </html>
+      `;
+      document.open();
+      document.write(combinedCode);
+      document.close();
+    }
+  }, [code]);
 
   let { id } = useParams();
   const handleSave = async () => {
@@ -172,7 +211,6 @@ export default function WebCraftIDE() {
       [activeTab]: value || '',
     }));
   };
-  
   
     const handleDownload = () => {
       const zip = new JSZip();
@@ -455,9 +493,10 @@ export default function WebCraftIDE() {
                   style={{ height: 'calc(100vh - 200px)', overflow: 'hidden' }}
                 >
                   <iframe
+                    ref={iframeRef}
                     srcDoc={output}
                     title="output"
-                    sandbox="allow-scripts"
+                    sandbox="allow-scripts allow-same-origin"
                     className="w-full h-full rounded-lg transition-all duration-300 ease-in-out"
                     style={{ transform: 'scale(0.99)', transformOrigin: 'center center' }}
                   />
